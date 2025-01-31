@@ -63,42 +63,44 @@
 <body class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
     <nav class="bg-blue-600 p-4 text-white shadow-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">සිංහල හෝඩිය - Sinhala Alphabet</h1>
-            <div class="space-x-4">
-                <button class="hover:text-yellow-300" onclick="playAllSounds()">Play All</button>
-                <button class="hover:text-yellow-300" onclick="toggleGuide()">Guide</button>
-            </div>
+            <!-- Back Button -->
+            <button onclick="history.back()" class="bg-white text-blue-600 px-4 py-2 rounded-md hover:bg-gray-200">
+                ← Back
+            </button>
+            
+            <!-- Title aligned to the right -->
+            <h1 class="text-2xl font-bold ml-auto text-right">සිංහල හෝඩිය - Sinhala Alphabet</h1>
         </div>
-    </nav>
+    </nav>    
 
     <main class="container mx-auto p-6">
         <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
             <!-- Vowels (ස්වර) -->
-            <div onclick="showPopup('අ', 'අම්මා', '/api/placeholder/200/200', 'a', 'mother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('අ', 'අම්මා', 'img/s_alphabet/img/mom.gif', 'a', 'mother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">අ</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">අ</h2>
                 <p class="text-lg mt-2"><span class="text-blue-600 font-bold">අ</span>ම්මා</p>
-                <p class="text-sm text-gray-500">a (as in "another")</p>
+                <!-- <p class="text-sm text-gray-500">a (as in "another")</p> -->
             </div>
 
-            <div onclick="showPopup('ආ', 'ආච්චි', '/api/placeholder/200/200', 'aa', 'grandmother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ආ', 'ආච්චි', 'img/s_alphabet/img/grandma.gif', 'aa', 'grandmother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ආ</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ආ</h2>
                 <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ආ</span>ච්චි</p>
-                <p class="text-sm text-gray-500">aa (as in "art")</p>
+                <!-- <p class="text-sm text-gray-500">aa (as in "art")</p> -->
             </div>
 
-            <div onclick="showPopup('ඇ', 'ඇත්තා', '/api/placeholder/200/200', 'ae', 'elephant')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ඇ', 'ඇතා', 'img/s_alphabet/img/elephant.gif', 'ae', 'elephant')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ඇ</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ඇ</h2>
-                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඇ</span>ත්තා</p>
-                <p class="text-sm text-gray-500">ae (as in "cat")</p>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඇ</span>තා</p>
+                <!-- <p class="text-sm text-gray-500">ae (as in "cat")</p> -->
             </div>
 
             <div onclick="showPopup('ඈ', 'ඈත', '/api/placeholder/200/200', 'aae', 'far')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
@@ -110,32 +112,32 @@
                 <p class="text-sm text-gray-500">aae (long ae sound)</p>
             </div>
 
-            <div onclick="showPopup('ඉ', 'ඉර', '/api/placeholder/200/200', 'i', 'sun')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ඉ', 'ඉර', 'img/s_alphabet/img/sun.gif', 'i', 'sun')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ඉ</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ඉ</h2>
                 <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඉ</span>ර</p>
-                <p class="text-sm text-gray-500">i (as in "in")</p>
+                <!-- <p class="text-sm text-gray-500">i (as in "in")</p> -->
             </div>
 
-            <div onclick="showPopup('ඊ', 'ඊතල', '/api/placeholder/200/200', 'ii', 'arrow')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ඊ', 'ඊතල', 'img/s_alphabet/img/arrow.gif', 'ii', 'arrow')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ඊ</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ඊ</h2>
                 <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඊ</span>තල</p>
-                <p class="text-sm text-gray-500">ii (as in "keep")</p>
+                <!-- <p class="text-sm text-gray-500">ii (as in "keep")</p> -->
             </div>
 
             <!-- Consonants (ව්‍යඤ්ජන) -->
-            <div onclick="showPopup('ක', 'කඩ', '/api/placeholder/200/200', 'ka', 'shop')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ක', 'කඩය', 'img/s_alphabet/img/shop.gif', 'ka', 'shop')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ක</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ක</h2>
-                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ක</span>ඩ</p>
-                <p class="text-sm text-gray-500">ka</p>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ක</span>ඩය</p>
+                <!-- <p class="text-sm text-gray-500">ka</p> -->
             </div>
 
             <div onclick="showPopup('ඛ', 'ඛණ්ඩ', '/api/placeholder/200/200', 'kha', 'piece')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
@@ -147,13 +149,13 @@
                 <p class="text-sm text-gray-500">kha (aspirated ka)</p>
             </div>
 
-            <div onclick="showPopup('ග', 'ගම', '/api/placeholder/200/200', 'ga', 'village')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+            <div onclick="showPopup('ග', 'ගම', 'img/s_alphabet/img/village.gif', 'ga', 'village')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
                 <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
                     <span class="text-5xl font-bold text-blue-600">ග</span>
                 </div>
                 <h2 class="text-4xl font-bold text-blue-600">ග</h2>
                 <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ග</span>ම</p>
-                <p class="text-sm text-gray-500">ga</p>
+                <!-- <p class="text-sm text-gray-500">ga</p> -->
             </div>
 
             <!-- Continue with more consonants -->
@@ -175,19 +177,22 @@
     <!-- Popup -->
     <div id="popup" class="popup">
         <div class="text-center">
-            <h2 id="popupLetter" class="text-6xl font-bold text-blue-600 mb-4"></h2>
-            <div id="popupWord" class="text-2xl mb-4"></div>
+            <h2 id="popupLetter" class="text-9xl font-bold text-blue-600 mb-4"></h2><br>
+            <div id="popupWord" class="text-3xl mb-4"></div>
             <div id="popupMeaning" class="text-xl mb-4 text-gray-600"></div>
-            <div class="gif-container mb-4">
+            <!-- <div class="gif-container mb-4">
                 <img id="popupGif" src="" alt="Letter demonstration" class="rounded-lg">
-            </div>
-            <button onclick="playSound()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 mr-2">
+            </div> -->
+            <div class="gif-container mb-4 w-50 h-auto">
+                <img id="popupGif" src="" alt="Letter demonstration" class="rounded-lg ">
+            </div>            
+            <!-- <button onclick="playSound()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 mr-2">
                 <span class="flex items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
                     </svg>
                     Play Sound
-                </button>
+                </button> -->
             <button onclick="closePopup()" class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600">
                 Close
             </button>
