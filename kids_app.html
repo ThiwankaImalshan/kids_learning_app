@@ -17,16 +17,56 @@
 </head>
 <body class="background-image min-h-screen flex flex-col">
     <!-- Navigation Bar -->
-    <nav class="bg-blue-500 p-4 text-white shadow-lg">
+    <nav class="bg-blue-600 p-4 text-white shadow-2xl rounded-lg">
         <div class="container mx-auto flex justify-between items-center">
-            <h1 class="text-2xl font-bold">Kids Learning App</h1>
-            <div class="space-x-4">
-                <!-- <a href="#" class="hover:text-yellow-300">Home</a> -->
-                <!-- <a href="alphabet.html" class="hover:text-yellow-300">Alphabet</a>
-                <a href="writing.html" class="hover:text-yellow-300">Writing</a> -->
+            <h1 class="text-2xl font-bold tracking-wide">Kids Learning App</h1>
+            
+            <div class="flex items-center space-x-2">
+                <div id="musicControls" class="bg-blue-700 px-3 py-2 rounded-full shadow-md flex items-center space-x-2">
+                    <svg id="musicIcon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M9 18V5l12-2v13"></path>
+                        <circle cx="6" cy="18" r="3"></circle>
+                        <circle cx="18" cy="16" r="3"></circle>
+                    </svg>
+                    <button id="playPauseBtn" class="bg-blue-500 hover:bg-blue-400 p-2 rounded-full transition-all duration-300 transform hover:scale-110">
+                        <svg id="playIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="white" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+                        </svg>
+                        <svg id="pauseIcon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="hidden">
+                            <rect x="6" y="4" width="4" height="16"></rect>
+                            <rect x="14" y="4" width="4" height="16"></rect>
+                        </svg>
+                    </button>
+                </div>
             </div>
         </div>
     </nav>
+
+    <audio id="backgroundMusic" loop>
+        <source src="img/s_alphabet/sound/hodiya.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const backgroundMusic = document.getElementById('backgroundMusic');
+
+        playPauseBtn.addEventListener('click', () => {
+            if (backgroundMusic.paused) {
+                backgroundMusic.play();
+                playIcon.classList.add('hidden');
+                pauseIcon.classList.remove('hidden');
+            } else {
+                backgroundMusic.pause();
+                pauseIcon.classList.add('hidden');
+                playIcon.classList.remove('hidden');
+            }
+        });
+    </script>
+    
+    
+    
 
     <!-- Main Content -->
     <main class="flex-grow flex items-center justify-center">
