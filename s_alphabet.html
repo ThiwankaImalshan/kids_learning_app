@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>සිංහල හෝඩිය</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .popup {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 2rem;
+            border-radius: 1rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            width: 90%;
+            max-width: 500px;
+        }
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 999;
+        }
+        .fade-in {
+            opacity: 0;
+            animation: fadeIn 1s forwards;
+        }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
+        .first-letter {
+            color: #EF4444;
+        }
+        .background-pattern {
+            background-color: #f0f9ff;
+            background-image: url('/api/placeholder/400/400');
+            background-size: 20px 20px;
+            opacity: 0.1;
+        }
+        .gif-container {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .gif-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+    </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100">
+    <nav class="bg-blue-600 p-4 text-white shadow-lg">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">සිංහල හෝඩිය - Sinhala Alphabet</h1>
+            <div class="space-x-4">
+                <button class="hover:text-yellow-300" onclick="playAllSounds()">Play All</button>
+                <button class="hover:text-yellow-300" onclick="toggleGuide()">Guide</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mx-auto p-6">
+        <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-6">
+            <!-- Vowels (ස්වර) -->
+            <div onclick="showPopup('අ', 'අම්මා', '/api/placeholder/200/200', 'a', 'mother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">අ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">අ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">අ</span>ම්මා</p>
+                <p class="text-sm text-gray-500">a (as in "another")</p>
+            </div>
+
+            <div onclick="showPopup('ආ', 'ආච්චි', '/api/placeholder/200/200', 'aa', 'grandmother')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ආ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ආ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ආ</span>ච්චි</p>
+                <p class="text-sm text-gray-500">aa (as in "art")</p>
+            </div>
+
+            <div onclick="showPopup('ඇ', 'ඇත්තා', '/api/placeholder/200/200', 'ae', 'elephant')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඇ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඇ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඇ</span>ත්තා</p>
+                <p class="text-sm text-gray-500">ae (as in "cat")</p>
+            </div>
+
+            <div onclick="showPopup('ඈ', 'ඈත', '/api/placeholder/200/200', 'aae', 'far')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඈ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඈ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඈ</span>ත</p>
+                <p class="text-sm text-gray-500">aae (long ae sound)</p>
+            </div>
+
+            <div onclick="showPopup('ඉ', 'ඉර', '/api/placeholder/200/200', 'i', 'sun')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඉ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඉ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඉ</span>ර</p>
+                <p class="text-sm text-gray-500">i (as in "in")</p>
+            </div>
+
+            <div onclick="showPopup('ඊ', 'ඊතල', '/api/placeholder/200/200', 'ii', 'arrow')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඊ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඊ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඊ</span>තල</p>
+                <p class="text-sm text-gray-500">ii (as in "keep")</p>
+            </div>
+
+            <!-- Consonants (ව්‍යඤ්ජන) -->
+            <div onclick="showPopup('ක', 'කඩ', '/api/placeholder/200/200', 'ka', 'shop')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ක</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ක</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ක</span>ඩ</p>
+                <p class="text-sm text-gray-500">ka</p>
+            </div>
+
+            <div onclick="showPopup('ඛ', 'ඛණ්ඩ', '/api/placeholder/200/200', 'kha', 'piece')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඛ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඛ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඛ</span>ණ්ඩ</p>
+                <p class="text-sm text-gray-500">kha (aspirated ka)</p>
+            </div>
+
+            <div onclick="showPopup('ග', 'ගම', '/api/placeholder/200/200', 'ga', 'village')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ග</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ග</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ග</span>ම</p>
+                <p class="text-sm text-gray-500">ga</p>
+            </div>
+
+            <!-- Continue with more consonants -->
+            <div onclick="showPopup('ඝ', 'ඝන', '/api/placeholder/200/200', 'gha', 'solid')" class="bg-white p-6 rounded-lg shadow-md text-center cursor-pointer hover:shadow-lg transition-shadow">
+                <div class="w-24 h-24 mx-auto mb-4 bg-blue-100 rounded-full flex items-center justify-center">
+                    <span class="text-5xl font-bold text-blue-600">ඝ</span>
+                </div>
+                <h2 class="text-4xl font-bold text-blue-600">ඝ</h2>
+                <p class="text-lg mt-2"><span class="text-blue-600 font-bold">ඝ</span>න</p>
+                <p class="text-sm text-gray-500">gha (aspirated ga)</p>
+            </div>
+
+            <!-- Add more letters following the same pattern -->
+
+            <!-- Add more letters as needed -->
+        </div>
+    </main>
+
+    <!-- Popup -->
+    <div id="popup" class="popup">
+        <div class="text-center">
+            <h2 id="popupLetter" class="text-6xl font-bold text-blue-600 mb-4"></h2>
+            <div id="popupWord" class="text-2xl mb-4"></div>
+            <div id="popupMeaning" class="text-xl mb-4 text-gray-600"></div>
+            <div class="gif-container mb-4">
+                <img id="popupGif" src="" alt="Letter demonstration" class="rounded-lg">
+            </div>
+            <button onclick="playSound()" class="bg-blue-500 text-white px-6 py-2 rounded-full hover:bg-blue-600 mr-2">
+                <span class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z" clip-rule="evenodd" />
+                    </svg>
+                    Play Sound
+                </button>
+            <button onclick="closePopup()" class="bg-red-500 text-white px-6 py-2 rounded-full hover:bg-red-600">
+                Close
+            </button>
+        </div>
+    </div>
+    <div id="overlay" class="overlay"></div>
+
+    <script>
+        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+        let currentLetter = '';
+        let currentSound = '';
+
+        function showPopup(letter, word, gifUrl, sound, meaning) {
+            currentLetter = letter;
+            currentSound = sound;
+            
+            document.getElementById('popupLetter').textContent = letter;
+            document.getElementById('popupGif').src = gifUrl;
+            document.getElementById('popupMeaning').textContent = `Meaning: ${meaning}`;
+            
+            const popupWord = document.getElementById('popupWord');
+            popupWord.innerHTML = '';
+
+            word.split('').forEach((char, index) => {
+                const span = document.createElement('span');
+                span.textContent = char;
+                span.classList.add('fade-in');
+                if (index === 0) {
+                    span.classList.add('first-letter');
+                }
+                span.style.animationDelay = `${index * 0.5}s`;
+                popupWord.appendChild(span);
+            });
+
+            document.getElementById('popup').style.display = 'block';
+            document.getElementById('overlay').style.display = 'block';
+        }
+
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
+        }
+
+        async function playSound() {
+            try {
+                // Create oscillator for a simple tone
+                const oscillator = audioContext.createOscillator();
+                const gainNode = audioContext.createGain();
+                
+                oscillator.connect(gainNode);
+                gainNode.connect(audioContext.destination);
+                
+                // Set frequency based on letter (this is just an example)
+                oscillator.frequency.value = 440; // A4 note
+                
+                // Fade in/out to avoid clicks
+                gainNode.gain.setValueAtTime(0, audioContext.currentTime);
+                gainNode.gain.linearRampToValueAtTime(0.5, audioContext.currentTime + 0.1);
+                gainNode.gain.linearRampToValueAtTime(0, audioContext.currentTime + 1);
+                
+                oscillator.start(audioContext.currentTime);
+                oscillator.stop(audioContext.currentTime + 1);
+
+                // Visual feedback
+                const playButton = document.querySelector('button');
+                playButton.classList.add('bg-blue-700');
+                setTimeout(() => playButton.classList.remove('bg-blue-700'), 1000);
+            } catch (error) {
+                console.error("Error playing sound:", error);
+            }
+        }
+
+        function playAllSounds() {
+            // Implementation for playing all sounds in sequence
+            console.log("Playing all sounds...");
+        }
+
+        function toggleGuide() {
+            // Implementation for showing/hiding pronunciation guide
+            console.log("Toggling guide...");
+        }
+
+        // Close popup when clicking outside
+        document.getElementById('overlay').addEventListener('click', closePopup);
+
+        // Resume AudioContext on user interaction
+        document.body.addEventListener('click', () => {
+            if (audioContext.state === 'suspended') {
+                audioContext.resume();
+            }
+        });
+    </script>
+</body>
+</html>

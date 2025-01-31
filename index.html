@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Screen</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            background-image: url('img/bg/kidsbg.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100vw;
+            height: 100vh;
+        }
+    </style>
+</head>
+<body class="relative">
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-white z-50">
+        <div class="flex flex-col items-center">
+            <img src="img/loading/1676219260_678828_gif-url.gif" alt="Loading..." class="w-32 h-32 md:w-48 md:h-48 lg:w-64 lg:h-64">
+            <p class="mt-4 text-lg font-semibold text-gray-700">Loading...</p>
+        </div>
+    </div>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            setTimeout(() => {
+                window.location.href = "kids_app.html";
+            }, 2000); // Adjust the timeout duration as needed
+        });
+    </script>
+</body>
+</html>
