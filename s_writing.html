@@ -26,11 +26,12 @@
             transform: translate(-50%, -50%);
             width: 90%;
             max-width: 800px;
-            height: 80vh;
+            height: 90vh; /* Changed from 80vh for better mobile view */
             background: white;
             border-radius: 20px;
             z-index: 1000;
-            padding: 2rem;
+            padding: 1rem; /* Reduced padding for mobile */
+            overflow-y: auto; /* Allow scrolling on smaller screens */
         }
         .overlay {
             display: none;
@@ -74,22 +75,73 @@
             pointer-events: none;
             z-index: 1001;
         }
+
+        @media (max-width: 768px) {
+            .popup > div {
+                flex-direction: column;
+            }
+            .popup > div > div {
+                width: 100%;
+            }
+            .canvas-container {
+                width: 100%;
+                max-width: 300px;
+                margin: 1rem auto;
+            }
+        }
+
+
+
+        .tools-container {
+        display: flex;
+        gap: 0.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1rem;
+    }
+    
+    .color-picker {
+        padding: 0;
+        width: 2rem;
+        height: 2rem;
+        border: 2px solid #ddd;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .color-picker:hover {
+        transform: scale(1.1);
+    }
+    
+    .tool-button {
+        padding: 0.5rem;
+        border-radius: 0.5rem;
+        cursor: pointer;
+        transition: all 0.2s;
+    }
+    
+    .tool-button.active {
+        background-color: #e5e7eb;
+        transform: scale(0.95);
+    }
     </style>
 </head>
 <body class="bg-blue-50 min-h-screen">
     <!-- Header -->
-    <header class="bg-gradient-to-r from-purple-500 to-pink-500 p-6 text-white flex items-center justify-between">
-        <!-- Back Button on the Left -->
-        <button onclick="history.back()" class="bg-white text-purple-600 px-4 py-2 rounded-full hover:bg-gray-200">
+    <header class="bg-gradient-to-r from-purple-500 to-pink-500 p-4 md:p-6 text-white flex flex-col md:flex-row items-center md:justify-between">
+        <!-- Back Button -->
+        <button onclick="history.back()" class="bg-white text-purple-600 px-4 py-2 rounded-full hover:bg-gray-200 self-start md:self-auto">
             ← Back
         </button>
     
-        <!-- Title and Subtitle aligned to the Right -->
-        <div class="text-right">
-            <h1 class="text-4xl font-bold">සිංහල හෝඩිය</h1>
-            <p class="mt-2">අකුරු ඉගෙන ගනිමු!</p>
+        <!-- Title and Subtitle -->
+        <div class="text-center md:text-right mt-4 md:mt-0">
+            <h1 class="text-3xl md:text-4xl font-bold">සිංහල හෝඩිය</h1>
+            <p class="mt-1 md:mt-2 text-base md:text-lg">අකුරු ඉගෙන ගනිමු!</p>
         </div>
     </header>
+    
        
 
     <!-- Alphabet Grid -->
@@ -106,17 +158,17 @@
     </main> -->
 
     <!-- Popup for Letter Practice -->
-    <div id="letterPopup" class="popup">
-        <div class="flex h-full">
+    <!-- <div id="letterPopup" class="popup">
+        <div class="flex h-full"> -->
             <!-- Left side: Letter and Example -->
-            <div class="w-1/2 flex flex-col items-center justify-center p-4">
+            <!-- <div class="w-1/2 flex flex-col items-center justify-center p-4">
                 <h2 id="currentLetter" class="text-8xl font-bold mb-4 text-purple-600"></h2>
                 <p id="exampleWord" class="text-2xl mb-8 text-gray-700"></p>
                 <img id="letterGif" alt="අකුරු ලිවීම" class="w-48 h-48 rounded-lg shadow-lg">
-            </div>
+            </div> -->
             
             <!-- Right side: Writing Canvas -->
-            <div class="w-1/2 flex flex-col items-center justify-center p-4">
+            <!-- <div class="w-1/2 flex flex-col items-center justify-center p-4">
                 <div class="canvas-container">
                     <img src="s_writing/canvas/five_ruler.jpg" alt="අකුරු ආදර්ශය" class="reference-image">
                     <canvas id="writingCanvas" width="300" height="300"></canvas>
@@ -128,10 +180,78 @@
                 </div>
             </div>
         </div>
+    </div> -->
+
+    <div id="letterPopup" class="popup">
+        <div class="flex flex-col md:flex-row h-full">
+            <!-- Left side: Letter and Example -->
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-2 md:p-4">
+                <h2 id="currentLetter" class="text-6xl md:text-8xl font-bold mb-2 md:mb-4 text-purple-600"></h2>
+                <p id="exampleWord" class="text-xl md:text-2xl mb-4 md:mb-8 text-gray-700"></p>
+                <img id="letterGif" alt="අකුරු ලිවීම" class="w-32 md:w-48 h-32 md:h-48 rounded-lg shadow-lg">
+            </div>
+            
+            <!-- Right side: Writing Canvas -->
+            <div class="w-full md:w-1/2 flex flex-col items-center justify-center p-2 md:p-4">
+
+                <div class="tools-container">
+                    <!-- Drawing Tools -->
+                    <button onclick="setTool('pen')" class="tool-button active" id="penTool">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                        </svg>
+                    </button>
+                    <button onclick="setTool('eraser')" class="tool-button" id="eraserTool">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                    </button>
+                    
+                    <!-- Color Picker -->
+                    <input type="color" id="colorPicker" value="#2563eb" class="color-picker" title="Choose color">
+                    
+                    <!-- Line Width -->
+                    <select id="lineWidth" class="rounded-lg border-gray-300 text-sm" title="Line width">
+                        <option value="1">Thin</option>
+                        <option value="3" selected>Normal</option>
+                        <option value="5">Thick</option>
+                    </select>
+                </div>
+
+                <div class="canvas-container">
+                    <img src="s_writing/canvas/five_ruler.jpg" alt="අකුරු ආදර්ශය" class="reference-image">
+                    <canvas id="writingCanvas" width="300" height="300"></canvas>
+                </div>
+                <div class="mt-4 space-x-2 md:space-x-4">
+                    <button onclick="clearCanvas()" class="bg-red-500 text-white px-3 py-1 md:px-4 md:py-2 rounded-full hover:bg-red-600 text-sm md:text-base">මකන්න</button>
+                    <button onclick="checkWriting()" class="bg-green-500 text-white px-3 py-1 md:px-4 md:py-2 rounded-full hover:bg-green-600 text-sm md:text-base">හරි</button>
+                    <button onclick="closePopup()" class="bg-gray-500 text-white px-3 py-1 md:px-4 md:py-2 rounded-full hover:bg-gray-600 text-sm md:text-base">වසන්න</button>
+                </div>
+            </div>
+        </div>
     </div>
+
     <div id="overlay" class="overlay"></div>
 
     <script>
+        let currentTool = 'pen';
+        let currentColor = '#2563eb';
+        let currentLineWidth = 3;
+        let lastX, lastY;
+
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`${tool}Tool`).classList.add('active');
+            
+            // Update cursor style
+            if (tool === 'eraser') {
+                canvas.style.cursor = 'crosshair';
+            } else {
+                canvas.style.cursor = 'pointer';
+            }
+        }
+
         // Sinhala alphabet and example words
         const sinhalaLetters = [
             { letter: 'අ', example: 'අම්මා', imagegif:'s_writing/letters/s1.jpg' },
@@ -203,23 +323,52 @@
 
         function startDrawing(e) {
             isDrawing = true;
-            draw(e);
+            const rect = canvas.getBoundingClientRect();
+            [lastX, lastY] = [e.clientX - rect.left, e.clientY - rect.top];
         }
+
+        // function draw(e) {
+        //     if (!isDrawing) return;
+        //     const rect = canvas.getBoundingClientRect();
+        //     const x = e.clientX - rect.left;
+        //     const y = e.clientY - rect.top;
+            
+        //     ctx.lineWidth = 3;
+        //     ctx.lineCap = 'round';
+        //     ctx.strokeStyle = '#2563eb'; // Blue color for better visibility
+        //     ctx.lineTo(x, y);
+        //     ctx.stroke();
+        //     ctx.beginPath();
+        //     ctx.moveTo(x, y);
+        // }
 
         function draw(e) {
             if (!isDrawing) return;
+            
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
             
-            ctx.lineWidth = 3;
+            ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
             ctx.lineCap = 'round';
-            ctx.strokeStyle = '#2563eb'; // Blue color for better visibility
+            ctx.lineJoin = 'round';
+            
+            if (currentTool === 'eraser') {
+                ctx.strokeStyle = '#ffffff';
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.strokeStyle = document.getElementById('colorPicker').value;
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
             ctx.lineTo(x, y);
             ctx.stroke();
-            ctx.beginPath();
-            ctx.moveTo(x, y);
+            
+            [lastX, lastY] = [x, y];
         }
+
 
         function stopDrawing() {
             isDrawing = false;
@@ -305,6 +454,68 @@
                 closePopup();
             }, 1500);
         }
+
+
+
+
+
+
+
+
+
+
+        canvas.addEventListener('touchstart', handleTouchStart, false);
+        canvas.addEventListener('touchmove', handleTouchMove, false);
+        canvas.addEventListener('touchend', stopDrawing, false);
+
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (currentTool === 'eraser') {
+                ctx.strokeStyle = '#ffffff';
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.strokeStyle = document.getElementById('colorPicker').value;
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+
+        // Update your handleTouchStart function
+        function handleTouchStart(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+        }
+
+
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('colorPicker').addEventListener('change', function(e) {
+                currentColor = e.target.value;
+            });
+            
+            document.getElementById('lineWidth').addEventListener('change', function(e) {
+                currentLineWidth = e.target.value;
+            });
+        });
     </script>
 </body>
 </html>
