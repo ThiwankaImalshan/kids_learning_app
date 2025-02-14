@@ -202,11 +202,11 @@
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
                         </svg>
                     </button>
-                    <button onclick="setTool('eraser')" class="tool-button" id="eraserTool">
+                    <!-- <button onclick="setTool('eraser')" class="tool-button" id="eraserTool">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                         </svg>
-                    </button>
+                    </button> -->
                     
                     <!-- Color Picker -->
                     <input type="color" id="colorPicker" value="#2563eb" class="color-picker" title="Choose color">
@@ -220,7 +220,7 @@
                 </div>
 
                 <div class="canvas-container">
-                    <img src="s_writing/canvas/five_ruler1.jpg" alt="අකුරු ආදර්ශය" class="reference-image">
+                    <!-- <img src="s_writing/canvas/five_ruler1.jpg" alt="අකුරු ආදර්ශය" class="reference-image"> -->
                     <canvas id="writingCanvas" width="300" height="300"></canvas>
                 </div>
                 <div class="mt-4 space-x-2 md:space-x-4">
@@ -239,19 +239,8 @@
         let currentColor = '#2563eb';
         let currentLineWidth = 3;
         let lastX, lastY;
-
-        function setTool(tool) {
-            currentTool = tool;
-            document.querySelectorAll('.tool-button').forEach(btn => btn.classList.remove('active'));
-            document.getElementById(`${tool}Tool`).classList.add('active');
-            
-            // Update cursor style
-            if (tool === 'eraser') {
-                canvas.style.cursor = 'crosshair';
-            } else {
-                canvas.style.cursor = 'pointer';
-            }
-        }
+        let writingCorrect = false;
+        let messageTimeout;
 
         // Sinhala alphabet and example words
         const sinhalaLetters = [
@@ -311,9 +300,15 @@
             
         ];
 
-        // Generate alphabet grid
+        function setTool(tool) {
+            currentTool = tool;
+            document.querySelectorAll('.tool-button').forEach(btn => btn.classList.remove('active'));
+            document.getElementById(`${tool}Tool`).classList.add('active');
+            canvas.style.cursor = tool === 'eraser' ? 'crosshair' : 'pointer';
+        }
+
+        // Grid generation
         const grid = document.querySelector('.grid');
-        
         sinhalaLetters.forEach(({letter, example}) => {
             const card = document.createElement('div');
             card.className = 'letter-card bg-white p-6 rounded-xl shadow-lg text-center cursor-pointer';
@@ -325,40 +320,99 @@
             grid.appendChild(card);
         });
 
-        // Canvas setup
-        let isDrawing = false;
         const canvas = document.getElementById('writingCanvas');
         const ctx = canvas.getContext('2d');
-        
-        canvas.addEventListener('mousedown', startDrawing);
-        canvas.addEventListener('mousemove', draw);
-        canvas.addEventListener('mouseup', stopDrawing);
-        canvas.addEventListener('mouseout', stopDrawing);
-        
-        // Make canvas transparent
-        ctx.fillStyle = 'transparent';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        function drawGuideLines() {
+            const pixelsPerCm = canvas.width / 5; // 5cm width
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw guide lines
+            const lines = [
+                { y: 0.5 * pixelsPerCm, color: 'red', opacity: 0.5 },
+                { y: 1.5 * pixelsPerCm, color: 'black', opacity: 0.5 },
+                { y: 2 * pixelsPerCm, color: 'black', opacity: 0.5 },
+                { y: 3.5 * pixelsPerCm, color: 'black', opacity: 0.5 },
+                { y: 4.5 * pixelsPerCm, color: 'red', opacity: 0.5 }
+            ];
+
+            lines.forEach((line, index) => {
+                ctx.beginPath();
+                ctx.strokeStyle = `rgba(${line.color === 'red' ? '255,0,0' : '0,0,0'},${line.opacity})`;
+                ctx.lineWidth = 1;
+                ctx.moveTo(0, line.y);
+                ctx.lineTo(canvas.width, line.y);
+                ctx.stroke();
+                
+                // Add numbers
+                ctx.fillStyle = line.color;
+                ctx.font = '12px Arial';
+                ctx.fillText((index + 1).toString(), 5, line.y - 5);
+            });
+        }
+
+        function checkWritingPosition(y) {
+            const pixelsPerCm = canvas.width / 5;
+            const firstLine = 0.5 * pixelsPerCm;
+            const secondLine = 1.5 * pixelsPerCm;
+            const fourthLine = 3.5 * pixelsPerCm;
+            const fifthLine = 4.5 * pixelsPerCm;
+            
+            if ((y >= fourthLine && y <= fifthLine)) {
+                showMessage("ඔබ භාවිත කරන රූල වැරදියි. 1 හා 4 අතර රූල් පමණක් භාවිතා කරන්න.");
+                writingCorrect = false;
+            } else {
+                hideMessage();
+                writingCorrect = true;
+            }
+        }
+
+        function showMessage(text) {
+            if (messageTimeout) {
+                clearTimeout(messageTimeout);
+            }
+            
+            let messageElement = document.getElementById('writingMessage');
+            if (!messageElement) {
+                messageElement = document.createElement('div');
+                messageElement.id = 'writingMessage';
+                messageElement.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background-color: #ef4444;
+                    color: white;
+                    padding: 10px 20px;
+                    border-radius: 5px;
+                    z-index: 1002;
+                    transition: opacity 0.3s;
+                `;
+                document.body.appendChild(messageElement);
+            }
+            
+            messageElement.textContent = text;
+            messageElement.style.opacity = '1';
+            messageTimeout = setTimeout(hideMessage, 2000);
+        }
+
+        function hideMessage() {
+            const messageElement = document.getElementById('writingMessage');
+            if (messageElement) {
+                messageElement.style.opacity = '0';
+            }
+        }
+
+        let isDrawing = false;
 
         function startDrawing(e) {
             isDrawing = true;
             const rect = canvas.getBoundingClientRect();
             [lastX, lastY] = [e.clientX - rect.left, e.clientY - rect.top];
+            checkWritingPosition(lastY);
         }
-
-        // function draw(e) {
-        //     if (!isDrawing) return;
-        //     const rect = canvas.getBoundingClientRect();
-        //     const x = e.clientX - rect.left;
-        //     const y = e.clientY - rect.top;
-            
-        //     ctx.lineWidth = 3;
-        //     ctx.lineCap = 'round';
-        //     ctx.strokeStyle = '#2563eb'; // Blue color for better visibility
-        //     ctx.lineTo(x, y);
-        //     ctx.stroke();
-        //     ctx.beginPath();
-        //     ctx.moveTo(x, y);
-        // }
 
         function draw(e) {
             if (!isDrawing) return;
@@ -366,6 +420,8 @@
             const rect = canvas.getBoundingClientRect();
             const x = e.clientX - rect.left;
             const y = e.clientY - rect.top;
+            
+            checkWritingPosition(y);
             
             ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
             ctx.lineCap = 'round';
@@ -387,6 +443,45 @@
             [lastX, lastY] = [x, y];
         }
 
+        function handleTouchMove(e) {
+            e.preventDefault();
+            if (!isDrawing) return;
+            
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            const x = touch.clientX - rect.left;
+            const y = touch.clientY - rect.top;
+            
+            checkWritingPosition(y);
+            
+            ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
+            ctx.lineCap = 'round';
+            ctx.lineJoin = 'round';
+            
+            if (currentTool === 'eraser') {
+                ctx.strokeStyle = '#ffffff';
+                ctx.globalCompositeOperation = 'destination-out';
+            } else {
+                ctx.strokeStyle = document.getElementById('colorPicker').value;
+                ctx.globalCompositeOperation = 'source-over';
+            }
+            
+            ctx.beginPath();
+            ctx.moveTo(lastX, lastY);
+            ctx.lineTo(x, y);
+            ctx.stroke();
+            
+            [lastX, lastY] = [x, y];
+        }
+
+        function handleTouchStart(e) {
+            e.preventDefault();
+            isDrawing = true;
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
+            checkWritingPosition(lastY);
+        }
 
         function stopDrawing() {
             isDrawing = false;
@@ -395,40 +490,24 @@
 
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawGuideLines();
         }
-
-        // function showPopup(letter, example, imagegif) {
-        //     document.getElementById('currentLetter').textContent = letter;
-        //     document.getElementById('exampleWord').textContent = example;
-        //     document.getElementById('letterGif').src = imagegif;
-            
-        //     // Update reference image src based on letter
-        //     const referenceImage = document.querySelector('.reference-image');
-        //     referenceImage.src = `s_writing/canvas/five_ruler.jpg`; // Replace with actual letter image path
-            
-        //     document.getElementById('letterPopup').style.display = 'block';
-        //     document.getElementById('overlay').style.display = 'block';
-        //     clearCanvas();
-        // }
-
 
         function showPopup(letter, example) {
             document.getElementById('currentLetter').textContent = letter;
             document.getElementById('exampleWord').textContent = example;
             
-            // Find the correct image from sinhalaLetters array
             const letterData = sinhalaLetters.find(item => item.letter === letter);
             if (letterData && letterData.imagegif) {
                 document.getElementById('letterGif').src = letterData.imagegif;
             } else {
-                document.getElementById('letterGif').src = 'default-image.jpg'; // Fallback image if not found
+                document.getElementById('letterGif').src = 'default-image.jpg';
             }
 
             document.getElementById('letterPopup').style.display = 'block';
             document.getElementById('overlay').style.display = 'block';
             clearCanvas();
         }
-
 
         function closePopup() {
             document.getElementById('letterPopup').style.display = 'none';
@@ -473,59 +552,19 @@
             }, 1500);
         }
 
-
-
-
-
-
-
-
-
-
+        // Event listeners
+        canvas.addEventListener('mousedown', startDrawing);
+        canvas.addEventListener('mousemove', draw);
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseout', stopDrawing);
         canvas.addEventListener('touchstart', handleTouchStart, false);
         canvas.addEventListener('touchmove', handleTouchMove, false);
         canvas.addEventListener('touchend', stopDrawing, false);
 
-        function handleTouchMove(e) {
-            e.preventDefault();
-            if (!isDrawing) return;
-            
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            const x = touch.clientX - rect.left;
-            const y = touch.clientY - rect.top;
-            
-            ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            if (currentTool === 'eraser') {
-                ctx.strokeStyle = '#ffffff';
-                ctx.globalCompositeOperation = 'destination-out';
-            } else {
-                ctx.strokeStyle = document.getElementById('colorPicker').value;
-                ctx.globalCompositeOperation = 'source-over';
-            }
-            
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            
-            [lastX, lastY] = [x, y];
-        }
-
-        // Update your handleTouchStart function
-        function handleTouchStart(e) {
-            e.preventDefault();
-            isDrawing = true;
-            const touch = e.touches[0];
-            const rect = canvas.getBoundingClientRect();
-            [lastX, lastY] = [touch.clientX - rect.left, touch.clientY - rect.top];
-        }
-
-
+        // Initialize canvas with guide lines when the page loads
         document.addEventListener('DOMContentLoaded', function() {
+            drawGuideLines();
+            
             document.getElementById('colorPicker').addEventListener('change', function(e) {
                 currentColor = e.target.value;
             });
