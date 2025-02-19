@@ -367,36 +367,67 @@
                 hideMessage();
                 writingCorrect = true;
             }
+            return y >= firstLine && y <= fourthLine;
         }
 
-        function showMessage(text) {
-            if (messageTimeout) {
-                clearTimeout(messageTimeout);
-            }
-            
-            let messageElement = document.getElementById('writingMessage');
-            if (!messageElement) {
-                messageElement = document.createElement('div');
-                messageElement.id = 'writingMessage';
-                messageElement.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background-color: #ef4444;
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 5px;
-                    z-index: 1002;
-                    transition: opacity 0.3s;
-                `;
-                document.body.appendChild(messageElement);
-            }
-            
-            messageElement.textContent = text;
-            messageElement.style.opacity = '1';
-            messageTimeout = setTimeout(hideMessage, 2000);
+        function showSuccessMessage(text) {
+        if (messageTimeout) {
+            clearTimeout(messageTimeout);
         }
+        
+        let messageElement = document.getElementById('writingMessage');
+        if (!messageElement) {
+            messageElement = document.createElement('div');
+            messageElement.id = 'writingMessage';
+            messageElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 10px 20px;
+                border-radius: 5px;
+                z-index: 1002;
+                transition: opacity 0.3s;
+            `;
+            document.body.appendChild(messageElement);
+        }
+        
+        messageElement.style.backgroundColor = '#22c55e'; // Green color
+        messageElement.style.color = 'white';
+        messageElement.textContent = text;
+        messageElement.style.opacity = '1';
+        messageTimeout = setTimeout(hideMessage, 2000);
+    }
+
+    // Update the showMessage function to show error message
+    function showMessage(text) {
+        if (messageTimeout) {
+            clearTimeout(messageTimeout);
+        }
+        
+        let messageElement = document.getElementById('writingMessage');
+        if (!messageElement) {
+            messageElement = document.createElement('div');
+            messageElement.id = 'writingMessage';
+            messageElement.style.cssText = `
+                position: fixed;
+                top: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                padding: 10px 20px;
+                border-radius: 5px;
+                z-index: 1002;
+                transition: opacity 0.3s;
+            `;
+            document.body.appendChild(messageElement);
+        }
+        
+        messageElement.style.backgroundColor = '#ef4444'; // Red color
+        messageElement.style.color = 'white';
+        messageElement.textContent = text;
+        messageElement.style.opacity = '1';
+        messageTimeout = setTimeout(hideMessage, 2000);
+    }
 
         function hideMessage() {
             const messageElement = document.getElementById('writingMessage');
@@ -415,33 +446,34 @@
         }
 
         function draw(e) {
-            if (!isDrawing) return;
-            
-            const rect = canvas.getBoundingClientRect();
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            checkWritingPosition(y);
-            
-            ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
-            ctx.lineCap = 'round';
-            ctx.lineJoin = 'round';
-            
-            if (currentTool === 'eraser') {
-                ctx.strokeStyle = '#ffffff';
-                ctx.globalCompositeOperation = 'destination-out';
-            } else {
-                ctx.strokeStyle = document.getElementById('colorPicker').value;
-                ctx.globalCompositeOperation = 'source-over';
-            }
-            
-            ctx.beginPath();
-            ctx.moveTo(lastX, lastY);
-            ctx.lineTo(x, y);
-            ctx.stroke();
-            
-            [lastX, lastY] = [x, y];
+        if (!isDrawing) return;
+        
+        const rect = canvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        writingCorrect = checkWritingPosition(y);
+        
+        ctx.lineWidth = currentTool === 'eraser' ? 20 : document.getElementById('lineWidth').value;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        
+        if (currentTool === 'eraser') {
+            ctx.strokeStyle = '#ffffff';
+            ctx.globalCompositeOperation = 'destination-out';
+        } else {
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
+            ctx.globalCompositeOperation = 'source-over';
         }
+        
+        ctx.beginPath();
+        ctx.moveTo(lastX, lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        
+        [lastX, lastY] = [x, y];
+    }
+
 
         function handleTouchMove(e) {
             e.preventDefault();
@@ -545,11 +577,16 @@
         }
 
         function checkWriting() {
-            showStarAnimation();
-            setTimeout(() => {
-                clearCanvas();
-                closePopup();
-            }, 1500);
+            if (writingCorrect) {
+                showSuccessMessage("ඔබ නිවැරදි රූල භාවිතා කරන ලදි!"); // Correct! You can write well.
+                showStarAnimation();
+                setTimeout(() => {
+                    clearCanvas();
+                    closePopup();
+                }, 1500);
+            } else {
+                showMessage("වැරදියි! නැවත උත්සාහ කරන්න."); // Wrong! Try again.
+            }
         }
 
         // Event listeners
