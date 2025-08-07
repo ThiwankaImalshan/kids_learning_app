@@ -355,20 +355,48 @@
 
         function checkWritingPosition(y) {
             const pixelsPerCm = canvas.width / 5;
-            const firstLine = 0.5 * pixelsPerCm;
-            const secondLine = 1.5 * pixelsPerCm;
-            const fourthLine = 3.5 * pixelsPerCm;
-            const fifthLine = 4.5 * pixelsPerCm;
+            const firstLine = 0.5 * pixelsPerCm;   // Line 1
+            const secondLine = 1.5 * pixelsPerCm;   // Line 2
+            const fourthLine = 3.5 * pixelsPerCm;   // Line 4
+            const fifthLine = 4.5 * pixelsPerCm;    // Line 5
             
-            if ((y >= fourthLine && y <= fifthLine)) {
-                showMessage("ඔබ භාවිත කරන රූල වැරදියි. 1 හා 4 අතර රූල් පමණක් භාවිතා කරන්න.");
+            // Check if drawing starts before line 1
+            if (y < firstLine) {
+                showMessage("1 වන රේඛාවට ඉහළින් ලිවීමෙන් වළකින්න"); // "Avoid writing above line 1"
                 writingCorrect = false;
-            } else {
+                return false;
+            }
+            // Check if drawing goes beyond line 4
+            else if (y > fourthLine) {
+                showMessage("ඔබ 4 වන රේඛාවෙන් පිටතට ලියන්න එපා!"); // "Don't write beyond line 4!"
+                writingCorrect = false;
+                return false;
+            }
+            
+            // If drawing is in the correct area (between lines 1 and 4)
+            else if (y >= firstLine && y <= fourthLine){
                 hideMessage();
                 writingCorrect = true;
+                return true;
             }
-            return y >= firstLine && y <= fourthLine;
         }
+
+        // function checkWritingPosition(y) {
+        //     const pixelsPerCm = canvas.width / 5;
+        //     const firstLine = 0.5 * pixelsPerCm;
+        //     const secondLine = 1.5 * pixelsPerCm;
+        //     const fourthLine = 3.5 * pixelsPerCm;
+        //     const fifthLine = 4.5 * pixelsPerCm;
+            
+        //     if ((y >= fourthLine && y <= fifthLine)) {
+        //         showMessage("ඔබ භාවිත කරන රූල වැරදියි. 1 හා 4 අතර රූල් පමණක් භාවිතා කරන්න.");
+        //         writingCorrect = false;
+        //     } else {
+        //         hideMessage();
+        //         writingCorrect = true;
+        //     }
+        //     return y >= firstLine && y <= fourthLine;
+        // }
 
         function showSuccessMessage(text) {
         if (messageTimeout) {
